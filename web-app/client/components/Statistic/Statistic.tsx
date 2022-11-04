@@ -2,8 +2,10 @@ import { FC, HTMLProps } from "react";
 import styles from "./Statistic.module.scss";
 import classNames from "classnames";
 
+export type StatisticSize = "compact" | "big";
+
 type StatisticProps = {
-  size?: "compact" | "big";
+  size?: StatisticSize;
   header?: string;
 } & Omit<HTMLProps<HTMLDivElement>, "size">;
 
