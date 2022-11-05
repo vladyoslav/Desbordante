@@ -19,7 +19,7 @@
   font-weight: 500;
 }
 
-.compact {
+.sm {
   .header {
     font-size: 12px;
   }
@@ -29,12 +29,22 @@
   }
 }
 
-.big {
+.lg {
   .header {
     font-size: 18px;
   }
 
   .inner {
     font-size: 26px;
+  }
+}
+
+.xl {
+  .header {
+    font-size: 20px;
+  }
+
+  .inner {
+    font-size: 32px;
   }
 }
