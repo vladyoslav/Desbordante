@@ -63,6 +63,9 @@ export class FileInfo extends Model implements FileInfoModelMethods {
     @Column({ type: BOOLEAN, allowNull: false })
     hasStats!: boolean;
 
+    @Column({ type: INTEGER, allowNull: false, defaultValue: 0 })
+    statsProgress!: number;
+
     @BelongsTo(() => User)
     user!: User | null;
 

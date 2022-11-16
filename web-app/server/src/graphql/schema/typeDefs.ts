@@ -593,12 +593,15 @@ const typeDefs = gql`
         supportedPrimitives: [MainPrimitiveType!]!
         tasks(filter: TasksInfoFilter!): [TaskInfo!]
         stats: [FileStats!]!
+        overview: FileOverview
+        statsProgress: Int!
     }
 
     type FileStats {
         columnIndex: Int!
         fileID: String!
         columnName: String
+        type: String
         distinct: Int
         isCategorical: Boolean
         count: Int
@@ -613,6 +616,13 @@ const typeDefs = gql`
         quantile50: String
         quantile75: String
         fileInfo: DatasetInfo!
+    }
+    
+    type FileOverview {
+        categoricals: Int!,
+        integers: Int!,
+        strings: Int!,
+        floats: Int!
     }
 
     type Query {
@@ -888,6 +898,8 @@ const typeDefs = gql`
         This query allows client to set task privacy.
         """
         changeTaskResultsPrivacy(taskID: String!, isPrivate: Boolean!): TaskInfo!
+
+        startProcessingStats(fileID: ID!, threadsCount: Int!): DatasetInfo!
     }
 `;
 

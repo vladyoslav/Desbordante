@@ -554,15 +554,45 @@ export const TaskInfoResolvers: Resolvers = {
                 prefix: MainPrimitiveType;
             })[];
         },
-        stats: async ({ fileID }, _,  { models }) => {
-            return await models.FileStats.findAll({
+        stats: async ({ fileID }, _, { models }) => {
+            /*return await models.FileStats.findAll({
                 where: {
                     fileID,
                 },
-                order: [ ["columnIndex", "ASC"]],
-            });
+                order: [["columnIndex", "ASC"]],
+            });*/
+            return [...Array(10)].map((_, index) => ({
+                columnIndex: index,
+                columnName: `Column #${index}`,
+                type: ["Integer", "Float", "String"][index % 3],
+                distinct: 256,
+                isCategorical: index % 2 === 0,
+                count: 1281731,
+                avg: "9706.470388",
+                STD: "7451.165309",
+                skewness: "0.637135",
+                kurtosis: "2.329082",
+                min: "0",
+                max: "28565",
+                sum: "12441083997",
+                quantile25: "3318",
+                quantile50: "7993",
+                quantile75: "14948",
+            }));
         },
-        supportedPrimitives: async ({ fileID, isBuiltIn, fileName }, obj, { models }) => {
+        overview: async () => {
+            return {
+                categoricals: 5,
+                integers: 4,
+                strings: 3,
+                floats: 3,
+            };
+        },
+        supportedPrimitives: async ({
+                                        fileID,
+                                        isBuiltIn,
+                                        fileName,
+                                    }, obj, { models }) => {
             if (isBuiltIn) {
                 const dataset = builtInDatasets.find(
                     (info) => info.fileName === fileName
@@ -710,6 +740,33 @@ export const TaskInfoResolvers: Resolvers = {
             } else {
                 throw new AuthenticationError("You don't have permission");
             }
+        },
+        startProcessingStats: async (
+            _,
+            { fileID, threadsCount },
+            { models },
+        ) => {
+            const file = await models.FileInfo.findByPk(fileID);
+
+            if (!file) {
+                throw new UserInputError("File not found");
+            }
+
+            file.hasStats = true;
+
+            await file.save();
+
+            const intervalId = setInterval(async () => {
+                file.statsProgress += 5;
+
+                await file.save();
+
+                if (file.statsProgress >= 100) {
+                    clearInterval(intervalId);
+                }
+            }, 1000);
+
+            return file;
         },
     },
 };
