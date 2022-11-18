@@ -41,7 +41,7 @@ export const DatasetCard: FC<DatasetCardProps> = ({ file, ...rest }) => {
         <PopupWindowContainer onOutsideClick={() => setFilePropsShown(false)}>
           <FilePropsView
             data={file}
-            fileId={file.fileID}
+            fileID={file.fileID}
             onClose={() => setFilePropsShown(false)}
           />
         </PopupWindowContainer>
